@@ -1,0 +1,1 @@
+# go语言特性在kubernetes/prometheus/tidb/syncthing中的体现
