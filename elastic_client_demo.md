@@ -1,7 +1,7 @@
 # elastic 的go client使用示例
 
 - 定义 Dao 结构体，其中包含 elastic client，并创建 Dao 结构体。通过多次 req.WhereEq 限定 elastic 存储对象的筛选条件。通过 req.Order 确定返回数据的排序方式。采用 req.Scan 提交查询的请求，并返回结果。
-```
+```go
 // Dao dao
 type Dao struct {
 	c *conf.Config

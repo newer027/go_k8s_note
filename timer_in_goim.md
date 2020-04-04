@@ -1,6 +1,6 @@
 # goim的timer实现高并发通信协议
 
-```
+```go
 package time
 
 import (

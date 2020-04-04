@@ -5,7 +5,7 @@
 
 
 
-```
+```go
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
@@ -29,7 +29,7 @@ func main() {
 
 
 
-```
+```go
 // NewDefaultKubectlCommand creates the `kubectl` command with default arguments
 func NewDefaultKubectlCommand() *cobra.Command {
 	return NewDefaultKubectlCommandWithArgs(NewDefaultPluginHandler(plugin.ValidPluginFilenamePrefixes), os.Args, os.Stdin, os.Stdout, os.Stderr)
@@ -229,7 +229,7 @@ func runHelp(cmd *cobra.Command, args []string) {
 
 
 
-```
+```go
 // NewCmdCreate returns new initialized instance of create sub command
 func NewCmdCreate(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cobra.Command {
 	o := NewCreateOptions(ioStreams)
@@ -293,7 +293,7 @@ func NewCmdCreate(f cmdutil.Factory, ioStreams genericclioptions.IOStreams) *cob
 
 
 
-```
+```go
 // NewCmdCreateDeployment is a macro command to create a new deployment.
 // This command is better known to users as `kubectl create deployment`.
 // Note that this command overlaps significantly with the `kubectl run` command.
@@ -335,7 +335,7 @@ func (o *DeploymentOpts) Run() error {
 
 
 
-```
+```go
 // Run executes a create subcommand using the specified options
 func (o *CreateSubcommandOptions) Run() error {
 	obj, err := o.StructuredGenerator.StructuredGenerate()
@@ -387,7 +387,7 @@ func (o *CreateSubcommandOptions) Run() error {
 
 
 
-```
+```go
 func (f *factoryImpl) DynamicClient() (dynamic.Interface, error) {
 	clientConfig, err := f.ToRESTConfig()
 	if err != nil {
@@ -399,7 +399,7 @@ func (f *factoryImpl) DynamicClient() (dynamic.Interface, error) {
 
 
 
-```
+```go
 type ResourceInterface interface {
 	Create(obj *unstructured.Unstructured, options metav1.CreateOptions, subresources ...string) (*unstructured.Unstructured, error)
 	Update(obj *unstructured.Unstructured, options metav1.UpdateOptions, subresources ...string) (*unstructured.Unstructured, error)
@@ -416,7 +416,7 @@ type ResourceInterface interface {
 
 
 
-```
+```go
 func (c *dynamicResourceClient) Create(obj *unstructured.Unstructured, opts metav1.CreateOptions, subresources ...string) (*unstructured.Unstructured, error) {
 	outBytes, err := runtime.Encode(unstructured.UnstructuredJSONScheme, obj)
 	if err != nil {
@@ -458,7 +458,7 @@ func (c *dynamicResourceClient) Create(obj *unstructured.Unstructured, opts meta
 
 
 
-```
+```go
 // Do formats and executes the request. Returns a Result object for easy response
 // processing.
 //

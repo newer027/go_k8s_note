@@ -1,7 +1,7 @@
 # drf的场景分析
 
 - 创建一个 filters.FilterSet，并在 viewsets.GenericViewSet 使用这个 filters.FilterSet。
-```
+```python
 class OrderStartFilter(filters.FilterSet):
     min_create = filters.DateTimeFilter(field_name="create_time", lookup_expr='gte')
     max_create = filters.DateTimeFilter(field_name="create_time", lookup_expr='lte')
@@ -36,7 +36,7 @@ class OrderStartViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 ```
 
 - 不调用drf，直接读取 request 信息，并用 JsonResponse 返回 json 对象。
-```
+```python
 def user_tree(request):
     item_id = jwt.decode(request.META['HTTP_AUTHORIZATION'][7:], None, None)['user_id']
     user_id = User.objects.filter(id=item_id)[0].username
@@ -48,7 +48,7 @@ def user_tree(request):
 ```
 
 - 通过 drf 中 APIView 方法，响应用户发起的 Get 请求。
-```
+```python
 class LastestStatusDistance(APIView):
     def get(self, request, format=None):
         statusDistance = StatusDistance.objects.first()

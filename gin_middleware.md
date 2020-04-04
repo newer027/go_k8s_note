@@ -4,7 +4,7 @@
 - 0.0 有了token/cookie的认证方式，就可以采用user/guest的鉴权中间件，设定每个路由入口的用户等级的访问限制。
 
 - 代码library/net/http/blademaster/routergroup.go
-```
+```go
 // GET is a shortcut for router.Handle("GET", path, handle).
 func (group *RouterGroup) GET(relativePath string, handlers ...HandlerFunc) IRoutes {
 	return group.handle("GET", relativePath, handlers...)
@@ -12,7 +12,7 @@ func (group *RouterGroup) GET(relativePath string, handlers ...HandlerFunc) IRou
 ```
 
 - 代码library/net/http/blademaster/server.go
-```
+```go
 // NewServer returns a new blank Engine instance without any middleware attached.
 func NewServer(conf *ServerConfig) *Engine {
 	engine := &Engine{
@@ -32,7 +32,7 @@ func NewServer(conf *ServerConfig) *Engine {
 ```
 
 - 代码library/net/http/blademaster/middleware/auth/auth_test.go
-```
+```go
 func create() *Auth {
 	return New(&Config{
 		Identify:    &warden.ClientConfig{},
@@ -56,7 +56,7 @@ func engine() *bm.Engine {
 ```
 
 - 代码library/net/http/blademaster/middleware/auth/auth.go
-```
+```go
 // User is used to mark path as access required.
 // If `access_key` is exist in request form, it will using mobile access policy.
 // Otherwise to web access policy.
@@ -98,7 +98,7 @@ func setMid(ctx *bm.Context, mid int64) {
 
 - 0.1 限流中间件，用到了 library/rate/limite 库对最近的一段时间的访问成功率的统计。
 - library/net/http/blademaster/middleware/limit/aqm/aqm_test.go
-```
+```go
 func TestAQM(t *testing.T) {
 	var group sync.WaitGroup
 	rand.Seed(time.Now().Unix())
@@ -116,7 +116,7 @@ func testaqm(ctx *bm.Context) {
 ```
 
 - library/net/http/blademaster/middleware/limit/aqm/aqm.go
-```
+```go
 // Limit return a bm handler func.
 func (a *AQM) Limit() bm.HandlerFunc {
 	return func(c *bm.Context) {
@@ -143,7 +143,7 @@ func (a *AQM) Limit() bm.HandlerFunc {
 - 0.2 缓存中间件，可以采用文件缓存和 memcache 缓存中任何一种，都具有 Get 和 Set 方法。文件缓存的每一个对象，都会有一个独立的tmp文件保存缓存信息，文件缓存并不提供过期(expire)的方法。
 
 - library/net/http/blademaster/middleware/cache/cache.go
-```
+```go
 // Cache is used to mark path as customized cache policy
 func (c *Cache) Cache(policy Policy, filter Filter) bm.HandlerFunc {
 	return func(ctx *bm.Context) {

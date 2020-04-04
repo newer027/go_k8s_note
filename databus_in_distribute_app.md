@@ -8,7 +8,7 @@ Kafka 起初是由 LinkedIn 公司采用 Scala 语言开发的一个分布式、
 
 
 - 代码0.0
-```
+```go
 func Init(c *conf.Config, s *service.Service) {
     // 启动tcp协议，启动sarama.Logger，关闭采集 sarama metrics，启动Service
     go accept()
@@ -17,7 +17,7 @@ func Init(c *conf.Config, s *service.Service) {
 
 - 上面的代码，表示服务启动的入口，其中 accept() 协程是一个无限循环的函数。
 - 代码0.0.1
-```
+```go
 func accept() {
     for {
         netC, err = listener.Accept()
@@ -28,7 +28,7 @@ func accept() {
 
 - accept() 协程启动了一个新的无限循环函数 serveConn(netC) 。
 - 代码0.0.1.0
-```
+```go
 // limiter
 consumerLimter = make(chan struct{}, 100)
 func serveConn(nc net.Conn) {
@@ -54,7 +54,7 @@ func serveConn(nc net.Conn) {
 - serveConn(netC) 根据该服务属于kafka client的发布或订阅的角色，启动发布或订阅服务。其中订阅服务的并发数在上面的代码中被设定为100。以下代码以订阅服务为例，调用支持 kafka client 的 sarama-cluster，和 kafka 集群进行交互。
 以下是创建一个kafka client的代码。
 - 代码0.0.1.0.0
-```
+```go
 import	cluster "github.com/bsm/sarama-cluster"
 func NewSub(c *conn, group, topic, color string, sCfg *conf.Kafka, batch int64) (s *Sub, err error) {
 	select {
@@ -71,7 +71,7 @@ func NewSub(c *conn, group, topic, color string, sCfg *conf.Kafka, batch int64) 
 
 - 以下是采用 redis 的命令行参数，执行 kafka sub client 操作的代码，其中有鉴权，心跳，设置KV键值对，读取键值对，丢失连接报错和命令行参数异常报错等功能。
 - 代码0.0.1.0.1
-```
+```go
 func (s *Sub) Serve() {
 	var (
 		err  error
@@ -105,6 +105,7 @@ func (s *Sub) Serve() {
 	}
 }
 ```
+
 - 采用Redis协议，将数据写入kakfa的方案，已经得到多家公司的认同。
 > Q：还有就是日志部分现在Redis是瓶颈吗，Redis也是集群？
 > A：分享的时候提到了，Redis是瓶颈，后来公司Golang工程师搞了一个Reids--> Kafka的代理服务，采用的Redis协议，但是直接写入到了Kafka，解决了性能问题。

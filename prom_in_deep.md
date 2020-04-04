@@ -2,7 +2,7 @@
 
 - 定义 Prom 结构体，和创建 Prom 结构体的函数。Prom 的 WithTimer 函数，依然返回 Prom 结构体。WithTimer 函数中调用了 prometheus.NewHistogramVec 和 prometheus.MustRegister。
 - 代码0.0
-```
+```go
 // Prom struct info
 type Prom struct {
 	timer   *prometheus.HistogramVec
@@ -44,7 +44,7 @@ missProm = prom.CacheMiss
 
 - HistogramVec 中包含 metricVec，间接包含 metricMap，从而也包含了 newMetric。newMetric 是一个函数，其返回结果是 Metric。newMetricVec 返回的结果也是 Metric。
 - 代码0.0.0
-```
+```go
 type HistogramVec struct {
 	*metricVec
 }
@@ -83,7 +83,7 @@ func NewHistogramVec(opts HistogramOpts, labelNames []string) *HistogramVec {
 
 - newMetricVec 中包含的 makeLabelPairs 会采集指标。
 - 代码0.0.0.1
-```
+```go
 func makeLabelPairs(desc *Desc, labelValues []string) []*dto.LabelPair {
 	totalLen := len(desc.variableLabels) + len(desc.constLabelPairs)
 	if totalLen == 0 {
@@ -109,7 +109,7 @@ func makeLabelPairs(desc *Desc, labelValues []string) []*dto.LabelPair {
 
 - 前期代码中 p.timer 的类型是 *HistogramVec ，通过 Collector 接口，p.timer具有 Describe 和 Collect 方法。Describe 函数返回 Metric.Desc()，其类型是 *Desc。r.Register(c) 中调用 r.collectorsByID[collectorID] = c，c 包含将监控指标落盘到TSDB的功能。
 - 代码0.0.1
-```
+```go
 func MustRegister(cs ...Collector) {
 	DefaultRegisterer.MustRegister(cs...)
 }
@@ -142,7 +142,8 @@ func (m *invalidMetric) Desc() *Desc { return m.desc }
 
 - goroutinesDesc，threadsDesc，gcDesc分别监控系统的golang程序的并发数，操作系统线程数和golang垃圾清理的间隔时间。
 - 代码0.1
-```func NewGoCollector() Collector {
+```go
+func NewGoCollector() Collector {
 	return &goCollector{
 		goroutinesDesc: NewDesc(
 			"go_goroutines",

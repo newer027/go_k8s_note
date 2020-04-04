@@ -5,7 +5,7 @@
 - proxmox 中的 pve-cluster 是用来同步多个宿主机状态的服务，其后台数据库是 sqlite。 其中 dfsm.c 提供了分布式有限状态机的功能。
 - pve-cluster 的分布式状态同步的流程如下。
 
-```
+```bash
 The following example assumes that 'P' joins, 'Q' and 'R' share the
 same state.
 

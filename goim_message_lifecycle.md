@@ -5,7 +5,7 @@
 ## logic 用 kafka client 发布通信内容。
 
 - cmd/logic/main.go
-```
+```go
 func main() {
 	if err := conf.Init(); err != nil {
 		panic(err)
@@ -17,7 +17,7 @@ func main() {
 
 
 
-```
+```go
 // New new a http server.
 func New(c *conf.HTTPServer, l *logic.Logic) *Server {
 	s := &Server{
@@ -36,7 +36,7 @@ func (s *Server) initRouter() {
 
 
 
-```
+```go
 func (s *Server) pushKeys(c *gin.Context) {
 	err := c.BindQuery(&arg)
 	msg, err := ioutil.ReadAll(c.Request.Body)
@@ -47,7 +47,7 @@ func (s *Server) pushKeys(c *gin.Context) {
 
 
 
-```
+```go
 // PushKeys push a message by keys.
 func (l *Logic) PushKeys(c context.Context, op int32, keys []string, msg []byte) (err error) {
 	for server := range pushKeys {
@@ -61,7 +61,7 @@ func (l *Logic) PushKeys(c context.Context, op int32, keys []string, msg []byte)
 
 
 
-```
+```go
 // PushMsg push a message to databus.
 func (d *Dao) PushMsg(c context.Context, op int32, server string, keys []string, msg []byte) (err error) {
 	m := &sarama.ProducerMessage{
@@ -77,14 +77,14 @@ func (d *Dao) PushMsg(c context.Context, op int32, server string, keys []string,
 ## job 通过 kafka 订阅 logic 发布的通信内容。
 
 - cmd/job/main.go
-```
+```go
 func main() {
 	j := job.New(conf.Conf)
 	go j.Consume()
 }
 ```
 
-```
+```go
 // Job is push job.
 type Job struct {
 	c            *conf.Config
@@ -115,7 +115,7 @@ func (j *Job) Consume() {
 
 
 
-```
+```go
 func (j *Job) push(ctx context.Context, pushMsg *pb.PushMsg) (err error) {
 	switch pushMsg.Type {
 	case pb.PushMsg_PUSH:
@@ -152,7 +152,7 @@ func (j *Job) pushKeys(operation int32, serverID string, subKeys []string, body 
 
 
 
-```
+```go
 // Comet is a comet.
 type Comet struct {
 	serverID      string
@@ -212,7 +212,7 @@ func (c *Comet) process(pushChan chan *comet.PushMsgReq, roomChan chan *comet.Br
 ## comet 用 grpc 协议接收 job 服务发送的通信内容。
 
 - internal/comet/grpc/server.go
-```
+```go
 // PushMsg push a message to specified sub keys.
 func (s *server) PushMsg(ctx context.Context, req *pb.PushMsgReq) (reply *pb.PushMsgReply, err error) {
 	if len(req.Keys) == 0 || req.Proto == nil {
@@ -231,7 +231,7 @@ func (s *server) PushMsg(ctx context.Context, req *pb.PushMsgReq) (reply *pb.Pus
 ```
 
 - internal/comet/channel.go
-```
+```go
 // Push server push message.
 func (c *Channel) Push(p *grpc.Proto) (err error) {
 	select {
@@ -249,8 +249,7 @@ func (c *Channel) Ready() *grpc.Proto {
 
 - 通过 grpc 连接到 logic ，用 (*grpc.Proto).WriteTCP(wr)的方法，传递聊天的内容。
 - internal/comet/server_tcp.go
-```
-
+```go
 // dispatch accepts connections on the listener and serves requests
 // for each incoming connection.  dispatch blocks; the caller typically
 // invokes it in a go statement.
@@ -268,7 +267,7 @@ func (s *Server) dispatchTCP(conn *net.TCPConn, wr *bufio.Writer, wp *bytes.Pool
 ```
 
 - api/comet/grpc/protocol.go
-```
+```go
 // WriteTCP write a proto to TCP writer.
 func (p *Proto) WriteTCP(wr *bufio.Writer) (err error) {
 	var (

@@ -3,7 +3,7 @@
 更新压测脚本的参数：
 通过平台对外接口的REST API提交这次压测的参数，平台将这些参数填入预先设置好的代码生成器模板当中，得到新的压测素材。
 
-```
+```go
 "html/template"
 var buff           *template.Template
 buff = buff.Funcs(template.FuncMap{"unescaped": unescaped})
@@ -11,7 +11,7 @@ buff.Execute(io.Writer(file), scene)
 ```
 
 多个压测脚本的集合形成一个分布式应用的全链路压测的场景，覆盖到应用的所有接口。并根据接口参数依赖，计算出接口分组与执行顺序。
-```
+```go
 //DoPtestByJmeter do ptest by jmeter
 func (s *Service) DoPtestByJmeter(c context.Context, ptestParam model.DoPtestParam, testNameNicks []string) (resp model.DoPtestResp, err error) {
 	//获取 Debug,CPUCore,command

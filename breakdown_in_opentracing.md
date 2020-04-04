@@ -7,7 +7,7 @@ opentracing 的核心原理，是运用 http.RoundTripper 将微服务对外API 
 - 代码0.0 
 
 client_config.toml
-```
+```toml
 [HttpClientConfig]
     key = "key"
     secret = "secret"
@@ -22,7 +22,7 @@ client_config.toml
         ratio   = 1.0
         request = 100
 ```
-```
+```go
 type Conf struct {
     HTTPClientConfig *blademaster.ClientConfig
 }
@@ -39,7 +39,7 @@ err := httpClient.Post(c, d.c.AccRecover.UpPwdURL, metadata.String(c, metadata.R
 - 代码0.0.0
 pkg/net/http/blademaster/client.go
 
-```
+```go
 // NewClient new a http client.
 func NewClient(c *ClientConfig) *Client {
 	client := new(Client)
@@ -62,7 +62,7 @@ func NewClient(c *ClientConfig) *Client {
 - 代码0.0.0.0
 library/net/http/blademaster/trace.go
 
-```
+```go
 // TraceTransport 里包含 RoundTripper。 If a request is being traced with
 // Tracer, Transport will inject the current span into the headers,
 // and set HTTP related tags on the span.
@@ -106,7 +106,7 @@ func (t *TraceTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 - 代码0.0.0.0.0
 library/net/trace/tracer.go
 
-```
+```go
 // SetGlobalTracer SetGlobalTracer
 func SetGlobalTracer(tracer Tracer) {
 	_tracer = tracer
@@ -124,7 +124,7 @@ func Inject(t Trace, format interface{}, carrier interface{}) error {
 - 代码0.0.0.0.1
 library/net/trace/dapper.go
 
-```
+```go
 func (d *dapper) Inject(t Trace, format interface{}, carrier interface{}) error {
 	// if carrier implement Carrier use direct, ignore format
 	carr, ok := carrier.(Carrier)
@@ -152,7 +152,7 @@ func (d *dapper) Inject(t Trace, format interface{}, carrier interface{}) error 
 - 代码0.0.0.0.2
 library/net/trace/propagation.go
 
-```
+```go
 type httpCarrier http.Header
 
 func (h httpCarrier) Set(key, val string) {
@@ -178,7 +178,7 @@ func (httpPropagator) Inject(carrier interface{}) (Carrier, error) {
 - client.Post 函数调用 client.Do，间接调用 client.Raw。
 - 代码0.0.0.1
 
-```
+```go
 // 请求得到的响应格式为 []byte。 client.Do(c, req, res) 会调用 Raw（c, req, v），通过json.Unmarshal()获取json格式内容。
 func (client *Client) Raw(c context.Context, req *http.Request, v ...string) (bs []byte, err error) {
     brk := client.breaker.Get(uri)
@@ -197,7 +197,7 @@ func (client *Client) Raw(c context.Context, req *http.Request, v ...string) (bs
 - 创建属于该 uri 的熔断器。
 - 代码0.0.0.1.0
 
-```
+```go
 func (g *Group) Get(key string) Breaker {
 	brk = newBreaker(conf)
 	g.mu.Lock()
@@ -211,7 +211,7 @@ func (g *Group) Get(key string) Breaker {
 - 熔断器统计单位时间内的请求总数和成功请求数，并判断当前请求是否熔断。
 - 代码0.0.0.1.1
 
-```
+```go
 func (b *sreBreaker) Allow() error {
 	success, total := b.summary()
     // 请求失败多于1/3，而且请求数大于配置的最大请求数目，有可能返回错误。返回错误的比例和请求失败比例正相关。

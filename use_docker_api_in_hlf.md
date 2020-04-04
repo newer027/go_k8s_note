@@ -1,14 +1,14 @@
 # 调用docker api的开源软件相关代码分析
 
 -internal/peer/node/start.go
-```
+```go
 func serve(args []string) error {
 	go chaincodeCustodian.Work(buildRegistry, containerRouter, chaincodeLauncher)
 }
 ```
 
 - core/chaincode/lifecycle/custodian.go
-```
+```go
 func (cc *ChaincodeCustodian) Work(buildRegistry *container.BuildRegistry, builder ChaincodeBuilder, launcher ChaincodeLauncher) {
 	for {
 		cc.mutex.Lock()
@@ -44,7 +44,7 @@ func (cc *ChaincodeCustodian) Work(buildRegistry *container.BuildRegistry, build
 ```
 
 - core/chaincode/runtime_launcher.go
-```
+```go
 func (r *RuntimeLauncher) Launch(ccid string) error {
 	var startFailCh chan error
 	var timeoutCh <-chan time.Time
@@ -121,7 +121,7 @@ func (r *RuntimeLauncher) Launch(ccid string) error {
 ```
 
 - core/chaincode/container_runtime.go
-```
+```go
 // Start launches chaincode in a runtime environment.
 func (c *ContainerRuntime) Start(ccid string, ccinfo *ccintf.PeerConnection) error {
 	chaincodeLogger.Debugf("start container: %s", ccid)
@@ -135,21 +135,21 @@ func (c *ContainerRuntime) Start(ccid string, ccinfo *ccintf.PeerConnection) err
 ```
 
 - core/container/container.go
-```
+```go
 func (r *Router) Start(ccid string, peerConnection *ccintf.PeerConnection) error {
 	return r.getInstance(ccid).Start(peerConnection)
 }
 ```
 
 - core/container/dockercontroller/dockercontroller.go
-```
+```go
 func (ci *ContainerInstance) Start(peerConnection *ccintf.PeerConnection) error {
 	return ci.DockerVM.Start(ci.CCID, ci.Type, peerConnection)
 }
 ```
 
 
-```
+```go
 // Start starts a container using a previously created docker image
 func (vm *DockerVM) Start(ccid string, ccType string, peerConnection *ccintf.PeerConnection) error {
 	imageName, err := vm.GetVMNameForDocker(ccid)
@@ -232,7 +232,7 @@ func (vm *DockerVM) Start(ccid string, ccType string, peerConnection *ccintf.Pee
 ```
 
 - core/container/dockercontroller/dockercontroller.go
-```
+```go
 func (vm *DockerVM) createContainer(imageID, containerID string, args, env []string) error {
 	logger := dockerLogger.With("imageID", imageID, "containerID", containerID)
 	logger.Debugw("create container")
@@ -257,7 +257,7 @@ func (vm *DockerVM) createContainer(imageID, containerID string, args, env []str
 ```
 
 - vendor/github.com/fsouza/go-dockerclient/container.go
-```
+```go
 // CreateContainer creates a new container, returning the container instance,
 // or an error in case of failure.
 //
